@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sqlite3, os, sys
+import sqlite3, os, sys, shutil
 
 #root output directory
 root_dir = os.path.abspath(os.path.dirname(sys.argv[0]) or os.path.dirname(__file__) or os.getcwd())
@@ -39,12 +39,13 @@ def construct_volume(volume_row):
 		<title>{1}</title>
 	</head>
 	<body class="center">
-		<h1>Book of Mormon</h1>
+		<h1>{1}</h1>
 		<pre>""".format(os.path.relpath(menu_css_path, start=os.path.dirname(menu_path)), volume_row[2]))
 		for book in books:
 			f.write("""
 <a href="{0}/menu.html">{1}</a>""".format(book[6], book[2]))
-		f.write("""		</pre>
+		f.write("""
+		</pre>
 	</body>
 </html>""")
 		f.close()
@@ -109,16 +110,17 @@ def construct_chapter(volume_row, book_row, chapter_row, book_dir):
 	<p>
 		{1}
 	</p>
-</li>""".format(verse[2], verse[3]))
+</li>
+""".format(verse[2], verse[3]))
 		f.write("""			</ol>
 	</body>
 </html>
 """)
 		f.close()
-		
 
-if not os.path.exists(menu_css_path):
-	f = open(menu_css_path, "w", encoding="utf-8")
+night_menu_css_path = themes_dir + "/nightmenu.css"
+if not os.path.exists(night_menu_css_path):
+	f = open(night_menu_css_path, "w", encoding="utf-8")
 	f.write("""html {
 	font-family: sans;
 	font-size: 150%;
@@ -157,15 +159,18 @@ a:active {
 
 .center {
 	text-align: center;
-}""")
+}
+""")
 	f.close()
 
-if not os.path.exists(scriptures_css_path):
-	f = open(scriptures_css_path, "w", encoding="utf-8")
+night_scriptures_css_path = themes_dir + "/nightscriptures.css"
+if not os.path.exists(night_scriptures_css_path):
+	f = open(night_scriptures_css_path, "w", encoding="utf-8")
 	f.write("""html {
 	background: black;
 }
-ol li, p {
+
+p {
 	font-size: 110%;
 	font: sans, serif, monospace;
 	color: white;
@@ -198,8 +203,124 @@ th, td {
 a:hover {
 	color: white;
 	text-decoration: none;
-}""")
+}
+
+ol li p{
+font-weight:500;
+color:white;
+}
+ol li{
+font-weight:700;
+color:white;
+}
+""")
 	f.close()
+
+normal_menu_css_path = themes_dir + "/normalmenu.css"
+if not os.path.exists(normal_menu_css_path):
+	f = open(normal_menu_css_path, "w", encoding="utf-8")
+	f.write("""html {
+	font-family: sans;
+	font-size: 150%;
+	text-decoration: none;
+	background: white;
+	color: black;
+}
+
+a:link {
+	font-family: sans;
+	color: blue;
+	text-decoration: none;
+}
+
+a:visited {
+	font-family: sans;
+	color: blue;
+	text-decoration: none;
+}
+
+a:hover {
+	font-family: sans;
+	color: blue;
+	font-weight: bold;
+	font-size: 110%;
+	text-decoration: none;
+}
+
+a:active {
+	font-family: sans;
+	color: blue;
+	font-weight: bold;
+	font-size: 110%;
+	text-decoration: none;
+}
+
+.center {
+	text-align: center;
+}
+""")
+	f.close()
+
+normal_scriptures_css_path = themes_dir + "/normalscriputres.css"
+if not os.path.exists(normal_scriptures_css_path):
+	f = open(normal_scriptures_css_path, "w", encoding="utf-8")
+	f.write("""html {
+	background: white;
+}
+
+p {
+	font-size: 110%;
+	font: sans, serif, monospace;
+	color: black;
+}
+
+.first {
+	font-size: 150%;
+}
+
+b {
+	font-size: 70%;
+}
+
+h1 {
+	text-align: center;
+	color: black;
+}
+
+table {
+	border-collapse: separate;
+	border-spacing: 5px;
+	margin: 0 auto;
+}
+
+th, td { 
+	padding: 10px;
+	color: black;
+}
+
+a:hover {
+	color: white;
+	text-decoration: none;
+}
+ol li p{
+font-weight:500;
+color:black;
+}
+ol li{
+font-weight:700;
+color:black;
+}
+""")
+	f.close()
+
+
+
+
+if not os.path.exists(menu_css_path):
+	shutil.copy(normal_menu_css_path, menu_css_path)
+
+if not os.path.exists(scriptures_css_path):
+	shutil.copy(normal_scriptures_css_path, scriptures_css_path)
 
 volumes = cursor.execute('SELECT id, volume_title, volume_long_title, volume_title, volume_short_title, volume_lds_url FROM volumes').fetchall()
 #Write all the necessary shared files: menu and css files
