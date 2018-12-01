@@ -76,7 +76,7 @@ def construct_book(volume_row, book_row, volume_dir):
 	<pre>""".format(os.path.relpath(menu_css_path, start=os.path.dirname(menu_path)),book_row[3]))
 		for chapter in chapters:
 			f.write("""
-<a href="{0}.html">Chapter {0}</a>""".format(chapter[2]))
+<a href="ch{0}.html">Chapter {0}</a>""".format(chapter[2]))
 		f.write("""
 		</pre>
 	</body>
@@ -90,7 +90,7 @@ def construct_book(volume_row, book_row, volume_dir):
 def construct_chapter(volume_row, book_row, chapter_row, book_dir):
 	"""construct the file for a chapter of scripture."""
 	global cursor
-	chapter_path = book_dir + "/" + str(chapter_row[2]) +".html"
+	chapter_path = book_dir + "/ch" + str(chapter_row[2]) +".html"
 	verses = cursor.execute("SELECT id, chapter_id, verse_number, scripture_text FROM verses WHERE chapter_id=%i" % chapter_row[0]).fetchall();
 	if not os.path.exists(chapter_path):
 		f = open(chapter_path, "w", encoding="utf-8")
@@ -102,11 +102,11 @@ def construct_chapter(volume_row, book_row, chapter_row, book_dir):
 	</head>
 	<body>
 		<h1>{3} Chapter {4}</h1>
-		<ol>
-""".format(os.path.relpath(scriptures_css_path, start=os.path.dirname(chapter_path)), book_row[2], chapter_row[2], book_row[2], chapter_row[2]))
+		<ol class="{5} {6} ch{7}">
+""".format(os.path.relpath(scriptures_css_path, start=os.path.dirname(chapter_path)), book_row[2], chapter_row[2], book_row[2], chapter_row[2], volume_row[5], book_row[6], chapter_row[2]))
 		for verse in verses:
 		#	print(verse[2], verse[3])
-			f.write("""<li name="{0}">
+			f.write("""<li id="{0}">
 	<p>
 		{1}
 	</p>
