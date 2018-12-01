@@ -106,7 +106,7 @@ def construct_chapter(volume_row, book_row, chapter_row, book_dir):
 """.format(os.path.relpath(scriptures_css_path, start=os.path.dirname(chapter_path)), book_row[2], chapter_row[2], book_row[2], chapter_row[2], volume_row[5], book_row[6], chapter_row[2]))
 		for verse in verses:
 		#	print(verse[2], verse[3])
-			f.write("""<li id="{0}">
+			f.write("""<li id="v{0}">
 	<p>
 		{1}
 	</p>
