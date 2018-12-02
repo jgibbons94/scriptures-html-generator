@@ -261,7 +261,7 @@ a:active {
 """)
 	f.close()
 
-normal_scriptures_css_path = themes_dir + "/normalscriputres.css"
+normal_scriptures_css_path = themes_dir + "/normalscriptures.css"
 if not os.path.exists(normal_scriptures_css_path):
 	f = open(normal_scriptures_css_path, "w", encoding="utf-8")
 	f.write("""html {
